@@ -355,4 +355,6 @@ the following commands to wrap the entire selection:
 When you're trying to eliminate a list altogther, you should repeatedly
 *spit* (``C-LEFT``) until it's empty, and then delete the empty list. 
 
+``C-M-f``  move forward to final brace of current list
+``C-M-b``  move backward to beginning brace of current list
 
