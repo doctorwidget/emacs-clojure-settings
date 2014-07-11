@@ -7,7 +7,6 @@ Intro & Sneak Peeks
 
 ``C-x``  means "CTRL" (and) "x" simultaneously
 ``M-x``  means "ESC" (then) "x" sequentially (M = meta)
-``M-x``  On OSX terminal.app, change preferences to make Option key = Meta key
 
 ``C-x o``    Swaps windows, if more than one window is open. *o as in olive*
 
@@ -15,7 +14,7 @@ Intro & Sneak Peeks
 ``C-/``      Undo
 ``M-x undo`` Undo synonym. 
              *Many commands can be typed out at length after M-x.*
-
+             
 ``C-x C-s``  Save the current buffer
 ``C-x C-w``  Save As... with the current buffer
 ``C-x b``    Switch buffers (or create one just by typing a new name)
@@ -32,15 +31,15 @@ Intro & Sneak Peeks
 Movement
 ==================
 
-Tiny Jumps, Arrow Key Style
--------------------------------
+By Character (Arrow Key Style)
+---------------------------------
 
 ``C-p``  Previous LINE
 ``C-n``  Next LINE
 ``C-f``  Forward one CHAR
 ``C-b``  Backward one CHAR
 
-Medium Jumps
+By Lines & Words
 -----------------------------
 
 ``M-f``  Forward one WORD
@@ -52,7 +51,7 @@ Medium Jumps
 ``C-a``  start of LINE
 ``C-e``  end of LINE
 
-Big Jumps
+By Screens
 ----------------------
 
 ``C-v``  forward one SCREEN
@@ -119,12 +118,12 @@ Interrupts and escapes
 Split screens
 ======================
 
-``C-x C-l`` splits the screen (offering a choice of n screens)
-
 ``C-x 0``   Absorbs the current window into its parent. 
+
 ``C-x 1``   Deletes **all** windows other than the current one. 
 
 ``C-x 2``   Splits current screen in two horizontally
+
 ``C-x 3``   SPlits current window in two vertically
 
 ``C-x o``   (o as in Other window) ... cycles through all available windows

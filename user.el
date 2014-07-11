@@ -32,7 +32,7 @@
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'load-path "~/.emacs.d/themes")
 ;; Uncomment this to increase font size
-;; (set-face-attribute 'default nil :height 140)
+(set-face-attribute 'default nil :height 140)
 (load-theme 'tomorrow-night-bright t)
 
 ;; Flyspell often slows down editing so it's turned off
@@ -48,3 +48,12 @@
 
 ;; Save here instead of littering current directory with emacs backup files
 (setq backup-directory-alist `(("." . "~/.saves")))
+
+;; SNF: turn on column numbers in all modes, including rST, etc
+(setq-default column-number-mode t)
+
+;; SNF: use 80 chars as the limit by default
+(setq-default fill-column 80)
+
+;; SNF: use 4 spaces for tabs
+(setq-default tab-width 4)
