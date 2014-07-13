@@ -153,7 +153,7 @@ Miscellaneous Text Editing
 
 ``M-x column-number-mode``  Toggles column counting
 ``M-x line-number-mode``    Toggles line counting
-
+``M-x global-rainbow-delimiters-mode``  (colorful (matching (parentheses)))
 
 Files:
 =================
@@ -251,23 +251,17 @@ Shell/Terminal Modes
 
 ``M-x shell`` *or* ``M-x term``
             Change the current buffer into a shell or a full-fledged terminal. 
-            Not sure what the difference is; both appear to be a fully-functional 
-            terminal window. 
-
-``C-c C-k`` Line mode. 
-``C-c C-j`` Char mode. 
             
-            You need to be in line mode to use C-x o to swap to an Other window.
-            Alternatively, you can use C-c o to swap to an other window (see
-            the discussion of C-c as the terminal wormhole command below)
+            Terminal mode gives you color coding (yay!) and is a truer 
+            representation of an independent window. BUT it launches in 
+            *char mode* by default, which sucks, because you can only
+            use a small subset of Emacs commands in that mode. You want
+            to be in *line mode*, which allows you to use more or less
+            all of your commands. 
 
-            By default, all of your Cs and Ms will be soaked up by emacs, rather
-            than going through to the terminal. C-c is the emacs command that lets
-            the following command go through to the terminal. So (for example)
-            instead of just C-c to quit the Django server, it's C-c C-c. And 
-            as noted above, C-c o swaps windows (though you would think it would 
-            be C-x o, it's not. So much for consistency).
-
+``C-c C-k`` Toggle to char mode. 
+``C-c C-j`` Toggle to line mode. 
+            
 ``M-x quit``    Closes a shell or terminal session, leaving the window intact.
 
 
@@ -321,8 +315,8 @@ weird and wonderful errors you might get otherwise.
 ``C-DOWN``   Cycle down through the REPL history, terminal-style.
 
 
-Errors appear in a special new buffer called *nrepl-error*. If that's the
-active window, you can kill it with a plain old ``q``.
+              Errors appear in a special new buffer called *nrepl-error*. 
+``q``         Kills the active buffer -- i.e. the *nrepl-error* buffer!
 
 On OSX, all four ``C-ARROW`` keystrokes are bound to Mission Control stuff
 by default. Go to *System Preferences>Keyboard>Mission Control* and unbind 
@@ -334,7 +328,6 @@ Paredit.el Mode
 *Paredit* mode is a special parentheses-happy mode. It is *extremely* handsy
 with your code, and is reluctant to accept that no means no. 
 
-``M-s``  to splice an inner form out into its parent outer form
 ``M-DEL`` to override Paredit and backwards-delete whether it likes it or not
 
 ``M-SHIFT-9`` aka ``M-(``  Adds parentheses around the current element
@@ -347,6 +340,10 @@ the following commands to wrap the entire selection:
 ``M-x paredit-wrap-square``  Wraps with square (vector) braces
 ``M-x paredit-wrap-curly``   Wraps with curly (map) braces
 ``M-x paredit-wrap-angled``  Wraps with angled (html) braces
+
+``M-s``  to splice an inner form out into its parent outer form
+         Think of this as *promoting* the inner contents to the outer tier. 
+         This is a *highly* useful command.
 
 ``C-RIGHT`` Current list grows by *slurping* one element from the right
 ``C-LEFT``  Current list shrinks by *spitting* one element from the right

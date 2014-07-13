@@ -57,3 +57,6 @@
 
 ;; SNF: use 4 spaces for tabs
 (setq-default tab-width 4)
+
+;; SNF: do I need to turn this on manually each time?
+;; (global-rainbow-delimiters-mode)
