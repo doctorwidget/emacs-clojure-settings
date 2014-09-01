@@ -6,7 +6,7 @@ Intro & Sneak Peeks
 ========================
 
 ``C-x``  means "CTRL" (and) "x" simultaneously
-``M-x``  means "ESC" (then) "x" sequentially (M = meta)
+``M-x``  means "ESC" (then) "x" sequentially (M = m
 
 ``C-x o``    Swaps windows, if more than one window is open. *o as in olive*
 
@@ -192,9 +192,6 @@ Buffers:
 ========================
 
 ``C-x C-b`` to list all current buffers. 
-            Perversely, if you load one in a multiple-window scenario, it loads
-            it into the window that does not show the buffer list. WTF.
-``C-x 1``  to get rid of the buffer list
 
 ``C-x b`` (*not C-x C-b!*) gives a minibuffer to type the name of the buffer to
             switch to. Works much better than C-x C-b for multiple windows,

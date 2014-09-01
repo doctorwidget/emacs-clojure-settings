@@ -59,4 +59,8 @@
 (setq-default tab-width 4)
 
 ;; SNF: do I need to turn this on manually each time?
-;; (global-rainbow-delimiters-mode)
+(rainbow-delimiters-mode)
+
+;; SNF added this manually
+(when window-system   ;start speedbar iff in a windowed environment
+   (speedbar t)) 
