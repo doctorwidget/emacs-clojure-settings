@@ -62,5 +62,11 @@
 (rainbow-delimiters-mode)
 
 ;; SNF added this manually
+(setq speedbar-use-images nil)
+(setq speedbar-show-unknown-files t)
+
 (when window-system   ;start speedbar iff in a windowed environment
-   (speedbar t)) 
+  (speedbar t))
+
+
+
