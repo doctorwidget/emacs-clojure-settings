@@ -27,6 +27,8 @@ Intro & Sneak Peeks
     
 ``C-x C-c``  Quit.
 
+``C-u 4 M-x indent-rigidly``   Indent code blocks by 4, a la Python
+
 
 Movement
 ==================
@@ -132,6 +134,9 @@ Split screens
 ``C+M+SHIFT-v`` (CTRL & Option & Shift and v) scroll the Other window up
              *These both only work when there are precisely two (2) windows.*
 
+``C-x +``  Makes all windows equal. Invoke after two calls to ``C-x 3`` and you 
+           end up with three equally-sized columns. Sweet! 
+           
 
 Miscellaneous Text Editing
 ================================

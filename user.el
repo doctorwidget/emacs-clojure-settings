@@ -69,4 +69,7 @@
   (speedbar t))
 
 
+;; SNF added 2014_09_30 to enable ansi color inside the shell
+(ansi-color-for-comint-mode-on)
+
 

@@ -1,0 +1,11 @@
+ls -alFG
+cd Users/scottfitz
+ls -alFG
+. .bash_profile
+git status
+cd code/demo/git
+cd code/clj/demo
+ls -alFG
+cd clui-om/
+git status
+cd ~
