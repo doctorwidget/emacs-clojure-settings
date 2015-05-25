@@ -33,7 +33,14 @@
 (add-to-list 'load-path "~/.emacs.d/themes")
 ;; Uncomment this to increase font size
 (set-face-attribute 'default nil :height 140)
-(load-theme 'tomorrow-night-bright t)
+
+;; themes galore!
+(load-theme 'adwaita t)
+;;(load-theme 'wombat t)
+;;(load-theme 'soft-stone t)
+;;(load-theme 'tomorrow-night-bright t)
+
+
 
 ;; Flyspell often slows down editing so it's turned off
 (remove-hook 'text-mode-hook 'turn-on-flyspell)
@@ -72,4 +79,8 @@
 ;; SNF added 2014_09_30 to enable ansi color inside the shell
 (ansi-color-for-comint-mode-on)
 
+
+;; SNF added 2014_12_20 to enable syntax coloring for robot framework files
+(load-file "~/.emacs.d/vendor/robot-mode.el")
+(add-to-list 'auto-mode-alist '("\\.robot\\'" . robot-mode))
 
