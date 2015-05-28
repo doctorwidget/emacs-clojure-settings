@@ -1,15 +1,15 @@
 (require 'package)
-(add-to-list 'package-archives
-               '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives
-              '("tromey" . "http://tromey.com/elpa/") t)
+;; (add-to-list 'package-archives
+;;                '("marmalade" . "http://marmalade-repo.org/packages/") t)
+;; (add-to-list 'package-archives
+;;               '("tromey" . "http://tromey.com/elpa/") t)
 
 ;; SNF added this archive manually
-;; Updated URL on 2015-05-25 (was melpa-stable.milkbox.net/packages/"
-;; Other stable URL is http://stable.melpa.org/packages/"
-;; but the main URL below seems pretty stable to me!
+;; One 'stable' repository URL is melpa-stable.milkbox.net/packages/"
+;; Another stable URL is http://stable.melpa.org/packages/"
+;; and the unstable main repository is http://melpa.org/packages/
 (add-to-list 'package-archives
-             '("melpa-stable" . "http://melpa.org/packages/") t)
+             '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
 (when (not package-archive-contents)

@@ -6,7 +6,8 @@ Intro & Sneak Peeks
 ========================
 
 ``C-x``  means "CTRL" (and) "x" simultaneously
-``M-x``  means "ESC" (then) "x" sequentially (M = m
+``M-x``  means "ESC" (then) "x" sequentially 
+         You may be able to use OPTION instead of ESC, depending on settings
 
 ``C-x o``    Swaps windows, if more than one window is open. *o as in olive*
 
@@ -22,9 +23,6 @@ Intro & Sneak Peeks
 
 ``C-x C-f``  To open a file.
 
-``C-s``      Search mode: enter regex into minibuffer. C-s again to cycle.
-``C-r``      Backwards search mode.
-    
 ``C-x C-c``  Quit.
 
 ``C-u 4 M-x indent-rigidly``   Indent code blocks by 4, a la Python
@@ -60,9 +58,35 @@ By Screens
 ``M-v``  backwards one SCREEN
 
 ``M-<``  start of DOCUMENT (that's ``shift-option-,``)
-``M->`` end of DOCUMENT (again, ``shift-option-.``)
+``M->``  end of DOCUMENT (again, ``shift-option-.``)
+
+``M-g g``  go to line number (prompt for line# will appear)
 
 ``C-l`` ("l" as in lambda) -- redraw SCREEN, centering on cursor
+
+
+Search and Replace
+========================
+
+``C-s``   begin incremental forward search (plain text)
+``C-r``   begin incremental backwards search (plain text)
+
+``C-M-s``  begin incremental forward search (regexp)
+``C-M-r``  begin incremental backward search (regexp)
+
+``M-% STRING``    Enter query-replace mode
+                  The first string is the original.
+                  Next, you will prompted for the replacement string.
+                  Each match must be *confirmed* or *rejected*
+                  ``SPC``  confirms the replacement
+                  ``DEL``  skips that instance
+                  ``RET``  exit query-replace mode
+                  ``.`` replace this one, then exit
+                  ``!`` replace all!
+                  ``^`` go back one (in case of mistakes)
+
+``C-M-% STRING``   query-replace mode, but with regexps
+
 
 
 Copy and Paste
@@ -160,6 +184,7 @@ Miscellaneous Text Editing
 ``M-x line-number-mode``    Toggles line counting
 ``M-x global-rainbow-delimiters-mode``  (colorful (matching (parentheses)))
 
+
 Files:
 =================
 
@@ -212,18 +237,6 @@ Buffers:
 ``M-x kill-buffer`` alias
 
 ``M-x kill-some-buffers`` Offers to kill all buffers, round robin style. 
-
-
-Searching:
-======================
-
-``C-s``   Begin search. Type in the minibuffer to supply the target. 
-          The window will leap to the first match as you are typing. 
-``C-s``   (again!) to jump to the next match
-
-``C-r``   Backwards search
-
-``M-%``   Search & Replace          
 
 
 Processes:
@@ -335,6 +348,11 @@ with your code, and is reluctant to accept that no means no.
 ``M-SHIFT-9`` aka ``M-(``  Adds parentheses around the current element
                            Alias for ``M-x paredit-wrap-round``,
  
+``C-M-space``   Selects an entire SEXP all at once... handy in lisp files
+
+``M-;``         Comments out an entire marked area; useful with the above!
+
+
 Use standard editor *marking* (as for cut-copy-paste) followed by one of 
 the following commands to wrap the entire selection:
 

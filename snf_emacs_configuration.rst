@@ -52,7 +52,7 @@ When inside ``.emacs.d``, use any git command and you'll see this is the case.
 
 
 Package Repositories
----------------------------
+===================================
 
 Note that our version of ``init.el`` promptly wires up ``ELPA`` to use three
 different archives: ``marmalade``, ``tromey``, and ``melpa-stable``. You can see
@@ -74,8 +74,42 @@ package name, then you can bypass the giganormous list and instead:
    M-x package-install name-of-my-spiffy-new-package
 
 
+Occasionally you should refresh the package list; this may clear up odd ``file
+not found`` type messages:
+
+.. code-block:: emacs
+
+   M-x package-refresh-contents
+
+
+
+Starter Packages
+------------------------
+
+The main thing I started with was a bundle of related packages under the
+``starter-kit-*`` rubric. This is the starter kit developed by Phil Hagelberg of
+the Clojure community, which is why I used it. It included important tools like
+``paredit`` and the ``clojure-mode`` stuff. However, it doesn't look (from the
+github page upate in late 2014) like it's going to be maintained going forward.
+However, here are some of the packages it included:
+
+- magit (git stuff)
+- smex  (adds ``ido`` feedback to M-x commands)
+- ido-ubiquitous (more ``ido``; this is minibuffer bar autocompletion stuff)
+- paredit  (parentheses handling)
+- clojure-mode  (Clojure source file editing)
+- cider    (Clojure REPL tools)
+
+Note that Python support seems to be built into the core of Emacs 24 (yay), but
+I had to install helpers for both Clojure and Haskell. 
+
+The good news is, thanks to ``ELPA``, it's easy to see *all* of your installed
+packages, since they all live in the ``~/.emacs.d/elpa`` directory. From there
+you can google away for more information. Installed themes live here too! 
+
+
 Themes
------------------
+======================
 
 You can get far more themes than you could possibly want via ``ELPA``. You can
 also install them manually, and when I first started using Emacs I did just
