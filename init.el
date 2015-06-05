@@ -1,8 +1,17 @@
 (require 'package)
+
+
+;; NB: these are two older repositories that seem to be NOT recommended!
+;; (add-to-list 'package-archives             
+;;                 '("marmalade" . "http://marmalade-repo.org/packages/") t)
 ;; (add-to-list 'package-archives
-;;                '("marmalade" . "http://marmalade-repo.org/packages/") t)
-;; (add-to-list 'package-archives
-;;               '("tromey" . "http://tromey.com/elpa/") t)
+;;                '("tromey" . "http://tromey.com/elpa/") t)
+
+;; SNF added this archive manually
+;; This is the official GNU archive.
+(add-to-list 'package-archives
+             '("gnu" . "http://elpa.gnu.org/packages/") t)
+
 
 ;; SNF added this archive manually
 ;; One 'stable' repository URL is melpa-stable.milkbox.net/packages/"
@@ -14,6 +23,27 @@
 
 (when (not package-archive-contents)
   (package-refresh-contents))
+
+
+;; SNF: After upgrading from v24.3 to v24.5, I found that when I launched
+;; emacs.app emacs didn't know anything about my bash profile PATH, despite a
+;; helper function copied from somewhere (which presumably used to fix it). I
+;; still had access to my PATH when I launched emacs FROM a bash terminal, but
+;; not when I launched it as emacs.app from the Finder.
+
+;; The solution (other than just always launching from a terminal) was to
+;; install (exec-path-from-shell) via the standard emacs (package-install).
+;; Non-opaque docs can be found at the github project home:
+;; https://github.com/purcell/exec-path-from-shell
+
+;; The final step is to initialize that system. This must be called AFTER
+;; calling (package-initialize), which we do up above.
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
+;; also note that ``M-x getenv PATH`` will echo out your actual available PATH
+;; inside the current emacs instance. Very handy!
+
 
 ;; NOTE init.el calls to load user.el
 ;; So both are invoked, but init.el is in charge

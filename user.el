@@ -1,10 +1,6 @@
-;; This is where your customizations should live
-
-;; env PATH
-(defun set-exec-path-from-shell-PATH ()
-  (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
+;; This file is launched by init.el partway through.
+;; Think of init.el as the location for the highest-order customizations.
+;; More trivial stuff like theming lives here. 
 
 ;; Uncomment the lines below by removing semicolons and play with the
 ;; values in order to set the width (in characters wide) and height
@@ -65,8 +61,10 @@
 ;; SNF: use 4 spaces for tabs
 (setq-default tab-width 4)
 
-;; SNF: do I need to turn this on manually each time?
-(rainbow-delimiters-mode)
+;; SNF: turning on rainbow-delimiters-mode wasn't as easy as I expected
+;; (rainbow-delimiters-mode) ;;this works in the minibuffer, but not here!
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)  ;; this works here.
+
 
 ;; SNF added this manually
 (setq speedbar-use-images nil)

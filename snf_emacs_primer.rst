@@ -274,6 +274,13 @@ Shell/Terminal Modes
             to be in *line mode*, which allows you to use more or less
             all of your commands. 
 
+ ``C-c``    is the general replacement for ``C-x`` whenever you are inside a
+            terminal! Whatever you would trigger with ``C-x`` outside of a
+            terminal buffer, you should be able to trigger via ``C-c`` inside
+            it. So ``C-c b`` should let you change away from the terminal
+            buffer, ``C-c o`` should transfer you out of the term buffer into
+            whatever the next window is in the window cycle, etcetera.
+ 
 ``C-c C-k`` Toggle to char mode. 
 ``C-c C-j`` Toggle to line mode. 
             
@@ -336,6 +343,32 @@ weird and wonderful errors you might get otherwise.
 On OSX, all four ``C-ARROW`` keystrokes are bound to Mission Control stuff
 by default. Go to *System Preferences>Keyboard>Mission Control* and unbind 
 all of the ``^-ARROW`` shorcuts defined therein. 
+
+Note: in June 2015 I tried my first round of updating both Emacs and my various
+packages. It went mostly OK, but there were some quirks with CIDER mode.
+Specifically, CIDER mode turns out to depend on TWO package families in entirely
+different ecosystems! First, you need your ``*.el`` package installed in Emacs.
+Second, Cider invokes ``leiningen``, and leiningen must have access to an
+appropriate version of the ``[cider/cider-nrepl]`` namespace. So you have to
+manage *one* package inside Emacs itself (the ``*el`` family of files), and
+*another* one -- this time a standard Clojure package -- inside ``lein``.
+
+To manage the ``lein`` side of things in a global, cross-project way, you need
+to provide a custom ``~/.lein/profiles.clj`` file. In it you need to specify
+specific versions for both the ``cider-nrepl`` and ``tools.nrepl`` packages. It
+was tricky to pin this down, so it's worth keeping in mind going forward.
+
+Specifically, this is the contents of the file at ``/.lein/profiles.clj`` as of
+June 4, 2015:
+
+.. code-block:: clojure
+
+   {:user 
+     {:plugins [[cider/cider-nrepl "0.9.0-SNAPSHOT"]] 
+      :dependencies [[org.clojure/tools.nrepl "0.2.10"]]
+     }
+   }
+
 
 Paredit.el Mode
 ----------------------
