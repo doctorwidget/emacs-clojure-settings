@@ -101,7 +101,7 @@ However, here are some of the packages it included:
 - cider    (Clojure REPL tools)
 
 Note that Python support seems to be built into the core of Emacs 24 (yay), but
-I had to install helpers for both Clojure and Haskell. 
+I had to manually install helpers for both Clojure and Haskell. 
 
 The good news is, thanks to ``ELPA``, it's easy to see *all* of your installed
 packages, since they all live in the ``~/.emacs.d/elpa`` directory. From there

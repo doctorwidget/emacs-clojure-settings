@@ -8,6 +8,12 @@
 
 (setq initial-frame-alist '((top . 0) (left . 0) (width . 120) (height . 50)))
 
+;; set up a standard 3-column layout on every startup
+(split-window-horizontally)  ; C-x-3
+(split-window-horizontally)  ; C-x-3
+(balance-windows)          ; C-x-+
+
+
 ;; Place downloaded elisp files in this directory. You'll then be able;; to load them.
 ;;
 ;; For example, if you download yaml-mode.el to ~/.emacs.d/vendor,
@@ -44,8 +50,10 @@
 (load "~/.emacs.d/vendor/clojure")
 
 ;; hippie expand - don't try to complete with file names
-(setq hippie-expand-try-functions-list (delete 'try-complete-file-name hippie-expand-try-functions-list))
-(setq hippie-expand-try-functions-list (delete 'try-complete-file-name-partially hippie-expand-try-functions-list))
+(setq hippie-expand-try-functions-list
+      (delete 'try-complete-file-name hippie-expand-try-functions-list))
+(setq hippie-expand-try-functions-list
+      (delete 'try-complete-file-name-partially hippie-expand-try-functions-list))
 
 (setq ido-use-filename-at-point nil)
 
@@ -66,19 +74,24 @@
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)  ;; this works here.
 
 
-;; SNF added this manually
-(setq speedbar-use-images nil)
-(setq speedbar-show-unknown-files t)
+;; SNF turn speedbar on by default added this manually
+;; (setq speedbar-use-images nil)
+;; (setq speedbar-show-unknown-files t)
+;; (when window-system   ;start speedbar iff in a windowed environment
+;;   (speedbar t))
 
-(when window-system   ;start speedbar iff in a windowed environment
-  (speedbar t))
 
-
-;; SNF added 2014_09_30 to enable ansi color inside the shell
-(ansi-color-for-comint-mode-on)
+;; SNF added 2015_06_07 to enable ansi color inside the shell
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
 
 ;; SNF added 2014_12_20 to enable syntax coloring for robot framework files
 (load-file "~/.emacs.d/vendor/robot-mode.el")
 (add-to-list 'auto-mode-alist '("\\.robot\\'" . robot-mode))
+
+
+;; SNF time mode fu added 2015_06_06
+;; see http://www.emacswiki.org/emacs/DisplayTime
+(display-time-mode 1)
 

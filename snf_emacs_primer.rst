@@ -51,6 +51,7 @@ By Lines & Words
 ``C-a``  start of LINE
 ``C-e``  end of LINE
 
+
 By Screens
 ----------------------
 
@@ -64,6 +65,15 @@ By Screens
 
 ``C-l`` ("l" as in lambda) -- redraw SCREEN, centering on cursor
 
+
+Miscellaneous Essentials
+--------------------------------
+
+``C-M-SPACE``  select an entire SEXP (paredit mode only?)
+
+``M-^``        (delete-indentation)  removes everything up to next
+               non-whitespace character. NB: OPTION-SHIFT-6.
+               
 
 Search and Replace
 ========================
@@ -248,44 +258,7 @@ Processes:
 
 ``C-x C-c``  Quit out for real.
 
-
-
-Modes:
-======================
-
-Different modes will alter some of the key commands
-"Fundamental" mode is the default.
-
-``M-x fundamental-mode``     switches to Fundamental mode
-``M-x text-mode``   		switches to Text mode
-``M-x python-mode``          switches to Python mode (!)
-
-
-Shell/Terminal Modes
-==========================
-
-``M-x shell`` *or* ``M-x term``
-            Change the current buffer into a shell or a full-fledged terminal. 
-            
-            Terminal mode gives you color coding (yay!) and is a truer 
-            representation of an independent window. BUT it launches in 
-            *char mode* by default, which sucks, because you can only
-            use a small subset of Emacs commands in that mode. You want
-            to be in *line mode*, which allows you to use more or less
-            all of your commands. 
-
- ``C-c``    is the general replacement for ``C-x`` whenever you are inside a
-            terminal! Whatever you would trigger with ``C-x`` outside of a
-            terminal buffer, you should be able to trigger via ``C-c`` inside
-            it. So ``C-c b`` should let you change away from the terminal
-            buffer, ``C-c o`` should transfer you out of the term buffer into
-            whatever the next window is in the window cycle, etcetera.
- 
-``C-c C-k`` Toggle to char mode. 
-``C-c C-j`` Toggle to line mode. 
-            
-``M-x quit``    Closes a shell or terminal session, leaving the window intact.
-
+             
 
 Menu bar:
 ======================
@@ -313,8 +286,60 @@ Emacs Terms of Art
 
 
 
+Modes:
+======================
+
+Different modes will alter some of the key commands
+"Fundamental" mode is the default.
+
+``M-x fundamental-mode``     switches to Fundamental mode
+``M-x text-mode``   		switches to Text mode
+``M-x python-mode``          switches to Python mode (!)
+
+
+Shell/Terminal Modes
+---------------------------------
+
+``M-x shell`` *or* ``M-x term``
+            Change the current buffer into a shell or a full-fledged terminal. 
+
+            Shell keeps you in a true emacs buffer, so you can always move
+            around and copy and paste using standard emacs commands. 
+            
+            Terminal mode gives you color coding (yay!) and is a truer
+            representation of an independent window. BUT it adds the complexity
+            of two *modes* -- *char mode* and *line mode*. Char mode is more
+            like an emacs buffer -- hence, more like ``shell`` -- in terms of
+            navigating around the screen and issuing commands to the minibuffer,
+            etcetera. In contrast, *line mode* is more like a genuine terminal.
+            That means many common emacs buffer commands are disabled. But *line
+            mode* is more likely to work with programs that take over the whole
+            screen -- e.g. nano -- than *char mode* is. So sometimes you want
+            one and sometimes the other.
+
+``C-c C-k`` Toggle to char mode of ``term``. Similar to a genuine terminal. 
+``C-c C-j`` Toggle to line mode of ``term``. Similar to an emacs shell. 
+ 
+ ``C-c``    the general replacement for ``C-x`` whene in terminal *line mode*.
+            Whatever you would trigger with ``C-x`` outside of a terminal
+            buffer, you should be able to trigger via ``C-c`` inside it. So
+            ``C-c b`` should let you change away from the terminal buffer, ``C-c
+            o`` should transfer you out of the term buffer into whatever the
+            next window is in the window cycle, etcetera.
+            
+``M-x quit``    Closes a shell or terminal session, leaving the window intact.
+
+
+Finally, note that emacs will look for a file named ``~/.emacs.d/init_bash.sh``
+to use as your startup file for both ``shell`` and ``term``. If you have a more
+old-school setup that uses an ``~/.emacs`` file in lieu of the ``~/.emacs.d``
+directory, you would add a second, separate ``~/.emacs_bash`` file. In either
+case, inside that file you would just load your usual bash profile, so it can
+contain a one-liner: ``. ~/.bash_profile``.
+
+
 Clojure CIDER Mode
-============================
+---------------------------------
 
 These should all be done with two windows: a window with clojure code, and 
 then a window with the REPL. I haven't experimented to see what kind of 
@@ -327,15 +352,17 @@ weird and wonderful errors you might get otherwise.
              Alias for ``M-x cider-eval-last-expression``
              Evaluates it to the minibuffer output area, not the REPL!
 
-``C-c M-n``  Sets the namespace of the **REPL** window to the top-level
-             namespace of the **code** window. 
-
 ``C-c C-k``  Compile everything in the current **code** window, and refresh
              the **REPL** window with those definitions. 
 
+
+``C-c M-n``  Sets the namespace of the **REPL** window to the top-level namespace
+             of the **code** window. NB: only works after at least one
+             compilation (C-c C-k) has been run.
+
+             
 ``C-UP``     Cycle up through the REPL history, terminal-style
 ``C-DOWN``   Cycle down through the REPL history, terminal-style.
-
 
               Errors appear in a special new buffer called *nrepl-error*. 
 ``q``         Kills the active buffer -- i.e. the *nrepl-error* buffer!
@@ -350,16 +377,16 @@ Specifically, CIDER mode turns out to depend on TWO package families in entirely
 different ecosystems! First, you need your ``*.el`` package installed in Emacs.
 Second, Cider invokes ``leiningen``, and leiningen must have access to an
 appropriate version of the ``[cider/cider-nrepl]`` namespace. So you have to
-manage *one* package inside Emacs itself (the ``*el`` family of files), and
-*another* one -- this time a standard Clojure package -- inside ``lein``.
+manage *one* set of files inside Emacs itself (the ``*el`` family of files), and
+*another* set -- this time standard Clojure packages -- inside ``lein``.
 
 To manage the ``lein`` side of things in a global, cross-project way, you need
 to provide a custom ``~/.lein/profiles.clj`` file. In it you need to specify
 specific versions for both the ``cider-nrepl`` and ``tools.nrepl`` packages. It
 was tricky to pin this down, so it's worth keeping in mind going forward.
 
-Specifically, this is the contents of the file at ``/.lein/profiles.clj`` as of
-June 4, 2015:
+Specifically, this is the complete contents of my file at
+``/.lein/profiles.clj`` as of June 4, 2015:
 
 .. code-block:: clojure
 
