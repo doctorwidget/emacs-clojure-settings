@@ -95,3 +95,42 @@
 ;; see http://www.emacswiki.org/emacs/DisplayTime
 (display-time-mode 1)
 
+
+;; SNF org mode configuration 2015_06_08. Org mode is standard with emacs 22+
+;; **but** comes with surprisingly few keys bound. Yet tutorials everywhere
+;; suggest the same set of keys for use, as if they were preconfigured. I feel
+;; like I must be missing some easy global default setting, or maybe these keys
+;; were lost in the shuffle during the transition from orgmode being an optional
+;; package to a standard one.
+(require 'org)
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-c." 'org-time-stamp)
+(define-key global-map "\C-c!" 'org-time-stamp-inactive)
+(setq org-log-done t)
+
+(setq org-log-done 'time)  ;; auto-timestamps on DONE
+;(setq org-log-done 'note) ;; forces you to write closing notes for each DONE!
+(setq org-todo-keywords
+         `((sequence "TODO(t)" "DEFER(f)" "WAIT(w)" "SCHED(s)" "|" "DONE(d)")))
+
+(setq org-agenda-files
+      (list "~/org/fitzbits.org"
+            "~/org/folk.org"
+            "~/org/hobby.org"
+            "~/org/home.org"
+            "~/org/misc.org"
+            "~/org/pasadero.org"
+            "~/org/skills.org"))
+
+;; zomg if you don't do this, all agenda commands (C-c a *) will completely
+;; destroy your window setup, replacing all of your carefully-laid-out buffers
+;; with two ginormous panels, one above the other, and one of which isn't even
+;; used! Your original setup is NOT restored when you kill either of those
+;; buffers!other setup, regardless of how you started out. WTF.
+(setq org-agenda-window-setup 'current-window)
+(setq org-agenda-restore-windows-after-quit t)
+(setq org-agenda-sticky nil) ;; for when agenda buffer is hidden, not killed
+
+;; scheduling and deadline-related values
+(setq org-deadline-warning-days 3) ;; 3 day warning on deadlines
