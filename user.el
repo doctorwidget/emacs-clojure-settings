@@ -104,19 +104,23 @@
 ;; package to a standard one.
 (require 'org)
 (define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
+(define-key global-map "\C-ca" 'org-agenda) ;; triggers followup
+(define-key global-map "\C-cc" 'org-capture)
+(define-key global-map "\C-cb" 'org-iswitchb)
 (define-key global-map "\C-c." 'org-time-stamp)
 (define-key global-map "\C-c!" 'org-time-stamp-inactive)
+(define-key global-map "\C-c/" 'org-sparse-tree) ; triggers followup
 (setq org-log-done t)
 
 (setq org-log-done 'time)  ;; auto-timestamps on DONE
 ;(setq org-log-done 'note) ;; forces you to write closing notes for each DONE!
 (setq org-todo-keywords
-         `((sequence "TODO(t)" "DEFER(f)" "WAIT(w)" "SCHED(s)" "|" "DONE(d)")))
+         `((sequence "TODO(t)" "HOLD(h)" "WAIT(w)" "|" "DONE(d)")))
 
 (setq org-agenda-files
       (list "~/org/fitzbits.org"
             "~/org/folk.org"
+            "~/org/health.org"
             "~/org/hobby.org"
             "~/org/home.org"
             "~/org/misc.org"
@@ -134,3 +138,9 @@
 
 ;; scheduling and deadline-related values
 (setq org-deadline-warning-days 3) ;; 3 day warning on deadlines
+
+;; prevent scheduled items from showing up as items on the global todo list
+;; NB: they will still show up on the global *agenda*, just not the *todo*
+(setq org-agenda-todo-ignore-scheduled 'future)
+(setq org-agenda-tags-todo-honor-ignore-options t)
+
