@@ -71,7 +71,7 @@ Miscellaneous Essentials
 
 ``C-M-SPACE``  select an entire SEXP (paredit mode only?)
 
-``M-^``        (delete-indentation)  removes everything up to next
+``M-^``        (delete-indentation)  removes everything back to next
                non-whitespace character. NB: OPTION-SHIFT-6.
                
 

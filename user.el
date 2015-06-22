@@ -144,3 +144,9 @@
 (setq org-agenda-todo-ignore-scheduled 'future)
 (setq org-agenda-tags-todo-honor-ignore-options t)
 
+
+
+;; add this to your .bash_profile to ensure that the latest emacs.app is
+;; used, in lieu of the (ancient) version that OSX defaults to. 
+;; alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs"
+
