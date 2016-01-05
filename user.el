@@ -150,3 +150,11 @@
 ;; used, in lieu of the (ancient) version that OSX defaults to. 
 ;; alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs"
 
+;; SNF 2015_12_09  I thought these used to be standard paredit mode?
+;; Also note: ``C-h k (key)`` makes emacs tell you the code for any key
+;; And (kbd) converts & sanitizes multiletter stuff like S-<right> 
+;; Finally, (define-key global-map) and (global-set-key) are synonyms?
+(global-set-key (kbd "S-<right>") 'paredit-forward-slurp-sexp)
+(global-set-key (kbd "S-<left>") 'paredit-forward-barf-sexp)
+
+

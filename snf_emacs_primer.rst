@@ -73,6 +73,12 @@ Miscellaneous Essentials
 
 ``M-^``        (delete-indentation)  removes everything back to next
                non-whitespace character. NB: OPTION-SHIFT-6.
+
+``DEL``    Plain old delete one (1) character backwards.
+``M-DEL``  Delete one (1) **word** backwards.
+
+``C-d``    Delete one (1) character *forwards*
+``M-d``    Delete one (1) **word** *forwards*
                
 
 Search and Replace
@@ -190,8 +196,9 @@ Miscellaneous Text Editing
 ``C-u spc`` Gives you 4 spaces, Python style. ``C-u #`` is the general repeat
             command, but if you omit the number, you get 4 of whatever you provide.
 
-``M-x column-number-mode``  Toggles column counting
-``M-x line-number-mode``    Toggles line counting
+``M-x column-number-mode``  Toggles column counting in the lower info stripe
+``M-x line-number-mode``    Toggles line counting in the lower info stripe
+``M-x linum-mode``          Toggles line numbers running down side of window
 ``M-x global-rainbow-delimiters-mode``  (colorful (matching (parentheses)))
 
 
@@ -329,6 +336,10 @@ Shell/Terminal Modes
             
 ``M-x quit``    Closes a shell or terminal session, leaving the window intact.
 
+``M-x rename-buffer`` Rename a buffer. The next time you run ``M-x term`` you'll
+                      create a second, separate terminal with the default name.
+                      So you can have ``aterm``, ``bterm``, ``cterm``, etcetera.
+
 
 Finally, note that emacs will look for a file named ``~/.emacs.d/init_bash.sh``
 to use as your startup file for both ``shell`` and ``term``. If you have a more
@@ -425,12 +436,21 @@ the following commands to wrap the entire selection:
          Think of this as *promoting* the inner contents to the outer tier. 
          This is a *highly* useful command.
 
-``C-RIGHT`` Current list grows by *slurping* one element from the right
-``C-LEFT``  Current list shrinks by *spitting* one element from the right
+``S-RIGHT`` Current list grows by *slurping* one element from the right
+``S-LEFT``  Current list shrinks by *spitting* one element from the right
+
+NB: on 2015_12_09 the slurp and spit command bindings above were suddenly
+nonfunctional. I could *swear* that they had previously been bound to
+``C-RIGHT`` and ``C-LEFT`` automagically, but that was no longer true. I had to
+edit my ``user.el`` and manually set the ``S``-based bindings above. Also note
+that the equivalent long forms are ``paredit-forward-slurp-sexp`` and
+``paredit-forward-barf-sexp``, and that there are a variety of other
+``paredit-foo`` commands available via ``M-X``. 
 
 When you're trying to eliminate a list altogther, you should repeatedly
-*spit* (``C-LEFT``) until it's empty, and then delete the empty list. 
+*spit* (``S-LEFT``) until it's empty, and then delete the empty list. 
 
-``C-M-f``  move forward to final brace of current list
-``C-M-b``  move backward to beginning brace of current list
+``C-M-f``  move forward one sexp (of same size as current sexp!)
+``C-M-b``  move backward one sexp (ditto)
+``C-M-u``  move out/up one tier in the sexp hierarchy
 

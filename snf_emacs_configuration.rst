@@ -108,6 +108,36 @@ packages, since they all live in the ``~/.emacs.d/elpa`` directory. From there
 you can google away for more information. Installed themes live here too! 
 
 
+Additional Packages
+=========================
+
+yaml-mode
+-------------
+
+Added on Oct 5 2015. Installed successfully with ``M-x package-install`` but
+only *after* a call to ``M-x package-refresh-contents``. After installation, my
+``~/.emacs.d/elpa`` directory now contains a ``yaml-mode`` subdirectory. 
+
+web-mode
+---------------
+
+The `web-mode`_ package gives you nice syntax highlighting not just for HTML,
+but also for a variety of templating languages, including Django/Jinja
+templates. Added on Oct 5 2015 via ``M-x package-install``. Again, new
+subdirectory now showing in ``~/.emacs.d/elpa``.
+
+.. _`web-mode`: http://web-mode.org/
+
+But note that I didn't take whatever extra steps I needed to in order for emacs
+to enter web-mode every time I load a ``j2`` template. For now I am turning that
+mode on and off manually with ``M-x web-mode``.
+
+NB: that strategy works for anything. So (for example), an Ansible ``hosts``
+file traditionally has no suffix and so isn't recognized as being of any
+particular flavor in emacs. But it's an ``ini/cfg`` format file, and you can
+toggle that mode on/off with ``M-x conf-mode``. 
+
+
 Themes
 ======================
 
