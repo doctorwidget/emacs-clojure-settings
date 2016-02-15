@@ -359,9 +359,10 @@ weird and wonderful errors you might get otherwise.
 ``M-x cider-jack-in``  Start a CIDER REPL in the second window.
                        Type this while inside a Clojure **code** window. 
 
-``C-x C-e``  In the **code** window, evaluates the nearest expression.
+``C-c C-e``  In the **code** window, evaluates the nearest expression.
              Alias for ``M-x cider-eval-last-expression``
              Evaluates it to the minibuffer output area, not the REPL!
+             Also works via ``C-x C-e``, but why not keep the ``C-c`` theme?
 
 ``C-c C-k``  Compile everything in the current **code** window, and refresh
              the **REPL** window with those definitions. 
@@ -382,7 +383,10 @@ On OSX, all four ``C-ARROW`` keystrokes are bound to Mission Control stuff
 by default. Go to *System Preferences>Keyboard>Mission Control* and unbind 
 all of the ``^-ARROW`` shorcuts defined therein. 
 
-Note: in June 2015 I tried my first round of updating both Emacs and my various
+Update Round 2
+....................
+
+in June 2015 I tried my first round of updating both Emacs and my various
 packages. It went mostly OK, but there were some quirks with CIDER mode.
 Specifically, CIDER mode turns out to depend on TWO package families in entirely
 different ecosystems! First, you need your ``*.el`` package installed in Emacs.
@@ -406,6 +410,32 @@ Specifically, this is the complete contents of my file at
       :dependencies [[org.clojure/tools.nrepl "0.2.10"]]
      }
    }
+
+Note #2
+.....................
+
+I did a second round of updates in Feb 2016. This is a multi-step process!
+
+First, inside emacs, I ran ``M-x package-list-packages``, and then manually
+chose the ``cider`` and ``clojure-mode`` packages for updating. In both cases
+when I had 2 windows open, clicking on the name in the main list popped up an
+ASCII UI in the second window. From there I clicked on the *Install* "button".
+NB: you must always upgrade *both* of these packages at the same time!
+
+Second, per the most-recent CIDER documentation, I updated the aforementioned
+``~/.lein/profiles.clj`` file, moving the ``cider-nrepl`` plugin and the
+``tools.nrepl`` dependency out of the *:user* profile and into the **:repl**
+profile:
+
+.. code-block:: clojure
+
+     { :repl {:plugins [[cider/cider-nrepl "0.10.2"]]
+         :dependencies [[org.clojure/tools.nrepl "0.2.12"]]}}
+
+So my ``profiles.clj`` file currently has *only* a ``:repl`` entry; you could
+still have a ``:user`` (or other) entry if you had something you wanted to put
+there. Also note that this round of CIDER upgrades gives much nicer color-coding
+in the REPL window.
 
 
 Paredit.el Mode
