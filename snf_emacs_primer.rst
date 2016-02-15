@@ -425,17 +425,18 @@ NB: you must always upgrade *both* of these packages at the same time!
 Second, per the most-recent CIDER documentation, I updated the aforementioned
 ``~/.lein/profiles.clj`` file, moving the ``cider-nrepl`` plugin and the
 ``tools.nrepl`` dependency out of the *:user* profile and into the **:repl**
-profile:
+profile. 
 
 .. code-block:: clojure
 
-     { :repl {:plugins [[cider/cider-nrepl "0.10.2"]]
-         :dependencies [[org.clojure/tools.nrepl "0.2.12"]]}}
+     {:repl {:plugins [[cider/cider-nrepl "0.10.2"]]
+             :dependencies [[org.clojure/tools.nrepl "0.2.12"]]}
+      :user {:plugins [[com.jakemccrary/lein-test-refresh "0.12.0"]
+                      [lein-ancient "0.6.8"]
+                      [mvxcvi/whidbey "1.3.0"]]}}
 
-So my ``profiles.clj`` file currently has *only* a ``:repl`` entry; you could
-still have a ``:user`` (or other) entry if you had something you wanted to put
-there. Also note that this round of CIDER upgrades gives much nicer color-coding
-in the REPL window.
+Note that I still have a ``:user`` map, which coexists happily with the
+``:repl`` map. 
 
 
 Paredit.el Mode
@@ -450,7 +451,7 @@ with your code, and is reluctant to accept that no means no.
                            Alias for ``M-x paredit-wrap-round``,
  
 ``C-M-space``   Selects an entire SEXP all at once... handy in lisp files
-
+ 
 ``M-;``         Comments out an entire marked area; useful with the above!
 
 
