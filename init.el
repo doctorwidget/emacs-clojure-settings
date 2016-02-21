@@ -61,8 +61,16 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default bold shadow italic underline bold bold-italic bold])
+ '(elpy-test-runner (quote elpy-test-pytest-runner))
  '(fci-rule-color "#2a2a2a")
- '(pyvenv-workon "py351"))
+ '(pyvenv-workon "py351")
+ '(safe-local-variable-values
+   (quote
+    ((elpy-test-runner . elpy-test-pytest-runner)
+     (elpy-project-root . ~/code/py/snf/snf)
+     (elpy-project-root . ~/code/py/snf/)
+     (whitespace-line-column . 80)
+     (lexical-binding . t)))))
 
 ;; SNF: removed call to custom-set-faces because it was overriding other theme values
 
