@@ -367,17 +367,33 @@ weird and wonderful errors you might get otherwise.
 ``C-c C-k``  Compile everything in the current **code** window, and refresh
              the **REPL** window with those definitions. 
 
-
+``C-c C-x``  Reload *all* modified files on the classpath. You will need to
+             redo any and all ``(require)`` statements, but sometimes this is
+             the only way to really see your changes in action. 
+             
 ``C-c M-n``  Sets the namespace of the **REPL** window to the top-level namespace
              of the **code** window. NB: only works after at least one
              compilation (C-c C-k) has been run.
 
+``C-c C-z``  Switch between *Clojure* buffers, including the Cider REPL itself.
+             Like ``C-x o``, but smart targets Clojure/Cider buffers only.
              
 ``C-UP``     Cycle up through the REPL history, terminal-style
 ``C-DOWN``   Cycle down through the REPL history, terminal-style.
 
-              Errors appear in a special new buffer called *nrepl-error*. 
-``q``         Kills the active buffer -- i.e. the *nrepl-error* buffer!
+``q``        Errors and doc strings often appear in special new buffers.
+             ``q`` gracefully kills those special popup buffers
+
+``C-c C-d d`` Show ClojureDocs for symbol at point
+``C-c C-d j`` Show JavaDoc for symbol at point
+``C-c C-d r`` Look up symbol in Grimoire (ClojureDocs on steroids)
+
+``C-c C-t t`` Run the (one)(1) test at point
+``C-c C-t n`` Run all tests for the current namespace
+``C-c C-t p`` Run all tests for the project
+``C-c C-t r`` Re-run only most-recently failed/errored tests
+
+``C-c C-q``   Quit the nREPL connection
 
 On OSX, all four ``C-ARROW`` keystrokes are bound to Mission Control stuff
 by default. Go to *System Preferences>Keyboard>Mission Control* and unbind 
@@ -450,8 +466,14 @@ with your code, and is reluctant to accept that no means no.
 ``M-SHIFT-9`` aka ``M-(``  Adds parentheses around the current element
                            Alias for ``M-x paredit-wrap-round``,
  
-``C-M-space``   Selects an entire SEXP all at once... handy in lisp files
- 
+``C-M-space``   Selects an entire sexp all at once
+
+``C-M-f``  move forward one sexp (of same size as current sexp!)
+``C-M-b``  move backward one sexp (ditto)
+
+``C-M-u``  move out/up one tier in the sexp hierarchy
+``C-M-d``  move in/down one tier in the sexp hierarchy
+
 ``M-;``         Comments out an entire marked area; useful with the above!
 
 
@@ -481,7 +503,4 @@ that the equivalent long forms are ``paredit-forward-slurp-sexp`` and
 When you're trying to eliminate a list altogther, you should repeatedly
 *spit* (``S-LEFT``) until it's empty, and then delete the empty list. 
 
-``C-M-f``  move forward one sexp (of same size as current sexp!)
-``C-M-b``  move backward one sexp (ditto)
-``C-M-u``  move out/up one tier in the sexp hierarchy
 

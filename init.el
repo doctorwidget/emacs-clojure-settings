@@ -19,6 +19,11 @@
 ;; and the unstable main repository is http://melpa.org/packages/
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
+
+;; SNF added this archive manually just for the ``elpy`` package
+(add-to-list 'package-archives
+             '("elpy" . "http://jorgenschaefer.github.io/packages/"))
+
 (package-initialize)
 
 (when (not package-archive-contents)
@@ -56,7 +61,8 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default bold shadow italic underline bold bold-italic bold])
- '(fci-rule-color "#2a2a2a"))
+ '(fci-rule-color "#2a2a2a")
+ '(pyvenv-workon "py351"))
 
 ;; SNF: removed call to custom-set-faces because it was overriding other theme values
 
