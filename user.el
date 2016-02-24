@@ -6,15 +6,25 @@
 ;; values in order to set the width (in characters wide) and height
 ;; (in lines high) Emacs will have whenever you start it
 
-(setq initial-frame-alist '((top . 0) (left . 0) (width . 120) (height . 50)))
+(setq initial-frame-alist '((top . 0) (left . 0) (width . 177) (height . 53)))
 
-;; set up a standard 3-column layout on every startup
-(split-window-horizontally)  ; C-x-3
-(split-window-horizontally)  ; C-x-3
-(balance-windows)          ; C-x-+
+(defun my-standard-layout ()
+  "Set up a 2-column, 3-window layout"
+  (split-window-horizontally)
+  (next-multiframe-window) ; NB: (other-window) fails only when used on startup
+  (split-window-vertically))
+
+(my-standard-layout)
+
+;; set up a standard 2-column, 3-window layout on every startup
+;(split-window-horizontally)  ; C-x-3
+;(sit-for 1)
+;(other-window) 
+;(split-window-vertically)  ; C-x-2
+;(balance-windows)          ; C-x-+  (only necessary if you want 3 columns)
 
 
-;; Place downloaded elisp files in this directory. You'll then be able;; to load them.
+;; Place downloaded elisp files in this directory. You'll then be able to load them.
 ;;
 ;; For example, if you download yaml-mode.el to ~/.emacs.d/vendor,
 ;; then you can add the following code to this file:
@@ -41,7 +51,6 @@
 ;;(load-theme 'wombat t)
 ;;(load-theme 'soft-stone t)
 ;;(load-theme 'tomorrow-night-bright t)
-
 
 
 ;; Flyspell often slows down editing so it's turned off
@@ -156,5 +165,8 @@
 ;; Finally, (define-key global-map) and (global-set-key) are synonyms?
 (global-set-key (kbd "S-<right>") 'paredit-forward-slurp-sexp)
 (global-set-key (kbd "S-<left>") 'paredit-forward-barf-sexp)
+
+;; SNF 2016-02-22  various elpy-mode things
+(elpy-enable)
 
 

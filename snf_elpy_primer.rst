@@ -30,78 +30,139 @@ you can add the github repository to your ``init.el`` as though it were:
 
 Then with emacs running, it's just ``M-x package-install RET elpy RET``.
 
+Your emacs startup script (e.g. ``.emacs.d/init.el``) should call
+``(elpy-enable)`` somewhere just once. This sets things up to automatically
+recognize python files and enter ``Elpy Fill`` minor mode, which co-exists with
+Python mode.  This is *not* something you should be calling manually on a
+per-session basis! It's really part of the installation process, and should be a
+persistent addition to your emacs startup script.
+
 
 Configuration
 ==================
 
-Initialize it with ``M-x elpy-enable``. At first glance it *seems* like this
-needs activating every single time (?).
+You can persistently change settings with ``M-x elpy-config``, but this can be
+somewhat misleading, because some settings *only* make sense when set via a
+``.dir-locals.el`` file, whereas others are things you'll just want to set once
+globally. For example, the virtualenv to use, the testrunner, and the project
+directory should all really be set on a *per-project* basis via a
+``.dir-locals.el`` file in the top directory of the project. Other settings
+(e.g. stuff like code formatting and code checking settings) should be set
+globally from here.
 
-Persistently change settings with ``M-x elpy-config``. 
-
-From ``elpy-config`` you can set a default virtualenv, but really you're likely
-to want this to be different from invocation to invocation. You can use the ``M-x
-pyvenv-workon`` command to launch virtualenvs for use inside emacs / with elpy,
-**but** note that each venv must have the various ``elpy`` helper packages
-available for things to work (e.g. ``jedi``, ``flake8``, ``autopep8``, and
-``pytest`` at a minimum). 
-
-It doesn't seem like the default virtualenv is actually remembered! You might
-need to run ``pyvenv-workon`` every single time. TODO: investigate further.
+One of the few things you will want to make sure is *globally* set from here is
+the ``pyvenv-mode`` setting in in the ``Python`` group. This should be toggled
+**on**, which means ``elpy-mode`` will look for a virtualenv to load whenever a
+python file is opened. However, you don't want a *global* default virtualenv; as
+discussed above, you want a ``.dir-locals.el`` file. So ``pyvenv-mode`` =
+globally on, but the specific virtualenv = set locally. You *can* use the ``M-x
+pyvenv-workon`` command to *manually* change virtualenvs, but this will rarely
+be useful.
 
 
-Missing Packages
+dir-locals.el
+------------------
+
+As noted above, several variables really should be *persistently* set on a
+*per-project* basis. There are commands to set them globally, but there's no
+upside to doing that.
+
+- ``elpy-project-root``, containing an absolute path from ``~`` to the project
+  root. This will be used as the basis for finding tests, doing global searches
+  within the project, and so on. 
+- ``elpy-project-ignored-directories``, containing directories not to search in
+  or run tests from. 
+- ``elpy-test-runner``, which will almost always be ``elpy-test-pytest-runner``,
+  but still makes sense to have as a per-project variable. 
+- ``pyvenv-workon``, containing a valid name for the virtualenv ``workon``
+  command. 
+
+The way to do this is to take advantage of a core emacs feature:
+*directory-local variables*. Emacs looks for a file named ``.dir-locals.el`` any
+time it opens a file anywhere. If it finds it, it applies any variable
+declarations within to the environment before it starts editing that file.
+Crucially, emacs also looks *up* the hierarchy for any ``.dir-locals.el`` files
+*above* the current file. That means any ``dir-local.el`` file applies to all
+files in all child directories too, which is exactly what we're after.
+
+Rather than manually editing your ``.dir-locals.el`` file, you can use the
+command ``M-x add-dir-local-variable`` while editing a top-level file. This
+gives you a nice little auto-popup buffer with the formatted contents of the new
+``.dir-locals.el`` file. Subsequent calls gracefully add new entries to that
+list. You should create precisely one (1) such file per project, at the project
+top and defining the symbol ``elpy-project-root``.
+
+Of course, after creating the first one with ``add-dir-local-variable``, future
+projects might be better served by just copy-pasting an existing
+``.dir-locals.el`` and filling in the appropriate new values. Here's an example
+``.dir-locals.el`` file after using the command to add two dir-local variables
+for the ``snf`` project:
+
+.. code-block:: lisp
+
+    ;;; Directory Local Variables
+    ;;; For more information see (info "(emacs) Directory Variables")
+
+    ((python-mode
+      (elpy-test-runner . elpy-test-pytest-runner)
+      (pvenv-workon . snf)
+      (elpy-project-root . ~/code/py/snf/snf)))
+
+Now whenever you open *any* file in that directory *or all child directories*,
+``elpy`` will have access to those variables. So the correct virtualenv will be
+*automatically* used, the correct test runner will be *automatically* used,
+project-wide searches will have the correct apex, and so on. 
+
+
+Inspecting Per-Buffer Variable
+......................................
+
+``C-h v`` shows the value of any variable. AKA ``M-x describe-variable``. You
+can use this to confirm the current value of per-buffer variables such as
+``elpy-project-root``, ``elpy-test-runner``, etc.
+
+
+Pip Packages
 ---------------------------------
 
-Several packages are *not* installed by default when you install ``elpy``
-itself, but you will definitely want them available. They are all installed via
-``pip``, and they must be available in the currently-enabled venv.
-
-In any case, here are some of the the packages that elpy can use if they're available:
+Note that each virtualenv must have the various ``elpy`` helper packages available for
+things to work:
 
 - jedi        for autocompletion
 - autopep8    for linting
 - flake8      for syntax checking
 - pytest      as a testrunner
 - importmagic for messing with imports 
+- rope        for refactoring
   
-Sure enough, after setting the default venv and then installing those packages
-into that ven, ``elpy-config`` stopped complaining about them being missing. I'm
-assuming there may be trouble with this down the line!
+The smart thing to do here would be to make a standard ``dev.txt`` file in
+``pip`` requirements format. You could then plop into your ``requirements/``
+directory for any new project. They wouldn't be part of the ``base.txt`` files,
+because they're specific to you as a developer, and are unnecessary for the
+deployed machine. Of course, that assumes you're using the multiple requirements
+file pattern, but why wouldn't you be?
 
-I can see where this could get complicated: the docs explicitly say that you
-*can* have one venv set as the default for ``elpy`` but then run
-``pyvenv-workon`` or ``pyvenv-activate`` to get a shell inside another venv.
-Some quick experimentation confirms this: when you use ``workon`` or
-``activate``, if the new venv does not include the packages above, then those
-functions are *not* available. So basically if you plan to use these functions
-in *any* project, that project *must* include those packages in the venv. 
+.. code-block:: bash
 
+   # example of requirements/dev.txt pip file
+   autopep8
+   flake8
+   importmagic
+   jedi
+   pytest
+   yapf
 
-Session Quickstart
-=================================
-
-``M-x elpy-enable``   Seems required each time (?)
-
-``M-x pyvenv-workon name_of_venv`` activates the venv of choice, which should
-have jedi, pyflakes, autopep8, etcetera installed, as discussed above.
-
-``C-c C-z`` starts a new Python REPL and background process. This is required
-for most of the code help tools to work, since they need to communicate with a
-Python process, and there isn't one running until you've done this. So even if
-you aren't about to get all interactive in a REPL, you probably want this to be
-part of your startup process. AKA ``M-x elpy-shell-switch-to-shell``. 
+There's no need to pin version numbers in this file.
 
 
 Interactive Mode
 =====================
 
-This, more so than autocompletion or refactoring, is what I'm really after. The
-commands are nicely similar to the ones in CIDER: I assume that both draw from
-some earlier, well-known mode.
-
-``C-c C-z``  switch to Python REPL buffer, starting one if necessary. Toggles
-between REPL and source after the first invocation starts the REPL. 
+``C-c C-z`` switch to Python REPL buffer, starting one if necessary. Toggles
+between REPL and source after the first invocation starts the REPL. This does
+*not* load any of the code from the current window! You'll need to either follow
+up with a ``C-c C-c``, or start running ``import`` statements in the REPL. AKA
+``M-x elpy-shell-switch-to-shell``.
 
 ``C-c C-c`` sends a full source buffer to the REPL, or a complete selected
 region if you have one active. AKA ``M-x elpy-shell-send-region-or-buffer``
@@ -116,79 +177,14 @@ AKA ``M-x python-shell-send-defun``.
 gotten wacky on you. 
 
 
-Navigation
-==============
-
-``C-UP``    Move up one full Python block
-``C-DOWN``  Move down one full Python block
-
-
 Project Features
 ====================
 
-You'll want to set an active project, which will enable ``lein`` -like behavior,
-by which I mean ``elpy`` is aware of which directories to search in beyond just
-the CWD. This lets you do project-wide searches for text strings, etcetera.
+You'll need a project defined in your ``.dir-locals.el`` for this to work. 
 
 ``C-c C-f``  Finds a file within the project. AKA ``M-x elpy-find-file``.
 
 ``C-c C-s``  Grep search within the project. AKA ``M-x elpy-rgrep-symbol``. 
-
-
-Persistent Setting Of Project Root And Other Variables
-----------------------------------------------------------
-
-``M-x elpy-set-project-root`` Set a project root directory on a one-off basis.
-But really, this is the sort of thing you want to have happen automatically,
-based on the directory you're currently working in! The two variables that need
-to be *persistently* set for this to happen are:
-
-- ``elpy-project-root``    (an absolute path from ``~`` to project root)
-- ``elpy-project-ignored-directories``  (varies per project)
-- ``elpy-test-runner``     (you will always want ``elpy-test-pytest-runner``)
-
-The way to do this is to take advantage of a core emacs feature: directory-local
-variables. Emacs looks for a file named ``.dir-locals.el`` any time it opens a
-file anywhere. If it finds it, it applies any variable declarations within to
-the environment when editing that file. Emacs also looks *up* the hierarchy for
-any ``.dir-locals.el`` files *above* the current file, meaning that a dir-local
-file works on all files in all child directories.
-
-Rather than manually editing your ``.dir-locals.el`` file, you should use the
-command ``M-x add-dir-local-variable`` while editing a top-level file. Then
-confirm in a terminal that the new file is created. You need precisely one (1)
-such file per project, at the project top and defining the symbol
-``elpy-project-root``.
-
-The ``add-dir-local-variable`` command gives you a nice little auto-popup buffer
-with the formatted contents of the new ``.dir-locals.el`` file. You need to save
-it yourself, but after that emacs should find and load it automatically whenever
-you visit any file in that directory and/or any file in any child directory of
-that directory.
-
-Here's an example ``.dir-locals.el`` file after using the command to add two
-dir-local variables for the ``snf`` project::
-
-.. code-block:: lisp
-
-    ;;; Directory Local Variables
-    ;;; For more information see (info "(emacs) Directory Variables")
-
-    ((python-mode
-      (elpy-test-runner . elpy-test-pytest-runner)
-      (elpy-project-root . ~/code/py/snf/snf)))
-
-The first time I visited a file in that directory, I got a little autopopup
-buffer asking me to confirm this as safe, and offering me the choice of
-rejecting these variables, accepting them once, or accepting them forever. Nice!
-
-
-Inspecting Per-Buffer Variable
-......................................
-
-``C-h v`` shows the value of any variable. AKA ``M-x describe-variable``. You
-can use this to confirm the current value of per-buffer variables such as
-``elpy-project-root``, ``elpy-test-runner``, etc.
 
 
 Syntax Tools
@@ -218,70 +214,79 @@ Tests inline inside emacs with color-coded output, woohoo!
 NB: The current venv must have ``pyvenv`` in it for this to work. So add that to
 the standard set of desired packages.
 
-``C-c C-t``  Run all tests using the current test runner. AKA ``M-x elpy-test``. 
-
-You will need to run ``M-x elpy-set-test-runner`` and choose ``py.test`` before
-doing this. However, setting this test-runner does not appear to be persistent!
-It defaults to vanilla ``python unittest``, which searches one directory
-higher-up than ``py.test``, meaning it ends up searching for tests in *all* of
-my python projects, which is disastrous since there are thousands of them and
-that's *never* what I want.
-
-To *persistently* set the test runner, you'll want to set a directory-local
-variable, as already discussed above. Use ``M-x add-dir-local-variable`` to add
-the ``(elpy-test-runner . elpy-test-pytest-runner)`` as a var-value pairing to
-the ``.dir-locals.el`` file at the project root. 
+``C-c C-t`` Run all tests using the current test runner. AKA ``M-x elpy-test``.
+Sometimes it seems like I have to run the command once via ``M-x elpy-test``
+once before ``C-c C-t`` works.
 
 
-  
-Appendix I: Default Directory Paths
+Appendix I: Path Fu
 ===========================================
 
 When you launch a REPL based on a python file, it's not always obvious where the
-Python process thinks you are for the purposes of imports. The quickest way
-around this is as follows:
+Python process is using as the current working directory. Use the ``os`` module
+to clarify things:
 
 .. code-block:: python
 
+     # launched an elpy repl while in ~/code/py/snf/snf/core.py
      >>> import os
      >>> os.getcwd()
      '/Users/scottfitz/code/py/snf/snf'
 
-From there, ``import`` statements should be obvious, as long as you've got your
-required ``__init__.py`` at the top of each source directory.
+So even though we've got our fancy-schmancy ``.dir-locals.el`` defining a
+*project* root of ``/Users/scottfitz/code/py/snf``, the launched REPL is one
+level lower down than that, in the same directory as the file we had open when
+we hit ``C-c C-z``. That will play havoc with import statements! One possible
+workaround is to use the ``os`` package to change the current directory:
 
 .. code-block:: python
 
-     >>> import core as c
-     >>> c.greet()
-     Hello World
+    >>> import os
 
-     >>> import things
-     >>> Location
-     NameError: 'Location' is not defined
+    >>> os.getcwd()
+    '/Users/scottfitz/code/py/gedomatic/gedutils'
 
-     >>> things.Location
-     <class 'things.Location'>
+    >>> os.chdir('..')
+    >>> os.getcwd()
+    '/Users/scottfitz/code/py/gedomatic
 
-     >>> foo = things.Location()
-     >>> bar
-     <things.Location object at 0x10a9622e8>
+    >>> import gedutils.gedomatic.Gedfile as G
+    Traceback blah blah
+    ImportError blah blah 'gedutils.gedomatic' is not a package. 
+    # That didn't work because it's not how you access things *inside* a module
 
-And so on. Elpy seems pretty good about this!
+    >>> from gedutils.gedomatic import Gedfile as G
+    # this *is* how you access things inside a module, and it works
 
-     
-   
-Appendix II: Summary of Pip Packages
-=========================================
+    >>> G
+    <class 'gedutils.gedomatic.Gedfile'>
+    
+    >>> import gedutils.gedomatic
+    # unadorned import statements work iff targeting a complete *modules*
 
-My initial tests were made in the ``py351`` venv, which had the following pip
-packages installed by the time I was done with this first round of
-documentation:
+    >>> gedutils.gedomatic
+    <module 'gedutils.gedomatic' from '/Users/scottfitz/code/py/gedomatic/gedutils/gedomatic.py'>
+    
+    >>> gedutils.gedomatic.Gedfile
+    <class 'gedutils.gedomatic.Gedfile'>
 
-- jedi
-- autopep8
-- flake8
-- pytest
-- importmagic
+    >>> G == gedutils.gedomatic.Gedfile
+    True
+    
+A second option would be to use the ``sys`` package to append whatever you
+consider the top level to the search path.
+
+.. code-block:: python
+
+    >>> import sys
+    >>> sys.path.append('..')
+
+And from there, all of the examples above work. 
+
+    
+
+    
+
+
 
   

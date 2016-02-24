@@ -1,6 +1,5 @@
 (require 'package)
 
-
 ;; NB: these are two older repositories that seem to be NOT recommended!
 ;; (add-to-list 'package-archives             
 ;;                 '("marmalade" . "http://marmalade-repo.org/packages/") t)
@@ -11,7 +10,6 @@
 ;; This is the official GNU archive.
 (add-to-list 'package-archives
              '("gnu" . "http://elpa.gnu.org/packages/") t)
-
 
 ;; SNF added this archive manually
 ;; One 'stable' repository URL is melpa-stable.milkbox.net/packages/"
@@ -49,9 +47,13 @@
 ;; also note that ``M-x getenv PATH`` will echo out your actual available PATH
 ;; inside the current emacs instance. Very handy!
 
-
-;; NOTE init.el calls to load user.el
-;; So both are invoked, but init.el is in charge
+;; NB: ~/.emacs.d/init.el is part of the standard emacs startup process. In
+;; contrast, there's absolutely nothing standard about user.el. However, some
+;; functions (like Custom, below) automatically edit ``init.el``, which makes me
+;; a tiny bit nervous. So I only do the most fundamental stuff here, like
+;; managing packages and the OSX path workaround above, and reserve all of my
+;; other custom code for user.el. Inside user.el, I know I'm to blame for all
+;; the code!
 (load "~/.emacs.d/user.el")
 
 (custom-set-variables
@@ -61,22 +63,30 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default bold shadow italic underline bold bold-italic bold])
- '(elpy-test-runner (quote elpy-test-pytest-runner))
+ '(custom-safe-themes
+   (quote
+    ("cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "9e54a6ac0051987b4296e9276eecc5dfb67fdcd620191ee553f40a9b6d943e78" "8b51a9d5604680d5d533c9cae132f68bca1e02563b2b0943ff9d45eb9043605a" "ebc7e94f697502eb2828c5ceb00ae073f05492d5a62c542d4acd2de4e3edba72" "5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "e93c4567f5d30365064747972b179e80939cee875627034dc76cd50477c6b998" default)))
  '(fci-rule-color "#2a2a2a")
- '(pyvenv-workon "py351")
+ '(pyvenv-activate py351)
+ '(pyvenv-mode t)
  '(safe-local-variable-values
    (quote
-    ((elpy-test-runner . elpy-test-pytest-runner)
+    ((elpy-project-ignored-directories . gedcom)
+     (elpy-project-root . ~/code/py/gedomatic)
+     (pyvenv-workon . gedomatic)
+     (pyvenv-workon . snf)
+     (elpy-test-runner . elpy-test-pytest-runner)
      (elpy-project-root . ~/code/py/snf/snf)
      (elpy-project-root . ~/code/py/snf/)
      (whitespace-line-column . 80)
      (lexical-binding . t)))))
 
 ;; SNF: removed call to custom-set-faces because it was overriding other theme values
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
