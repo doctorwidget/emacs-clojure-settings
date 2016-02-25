@@ -114,6 +114,62 @@ Now whenever you open *any* file in that directory *or all child directories*,
 project-wide searches will have the correct apex, and so on. 
 
 
+Venv Inconsistencies
+..............................
+
+Note that any given project will use one of ``pyvenv-workon`` or
+``pyvenv-activate``, but never both. Both commands result in an activated
+virtualenv, but the former targets only valid ``workon`` targets, while the
+latter targets any virtualenv anywhere. The former works through
+``virtualenvwrapper`` (which shouldn't be surprising, since that's where the
+``workon`` command originates), while the latter works through the
+more-primitive/more-foundational ``virtualenv``.
+
+Why not just do everything through ``pyvenv-workon``, since ``workon`` and
+``virtualenvwrapper`` are generally more convenient than vanilla ``virtualenv``?
+The answer is that for some small one-off projects I sometimes want to create
+venvs directly in the project directory, to be accessed via ``virtualenv``
+rather than ``workon``. If I'm creating a minor, possibly short-lived venv, such
+as one I might create when working through book examples, there's no need to
+enshrine it in my main ``workon`` menu. And yet I don't want to create and then
+delete a ``workon`` target, because I might come back to the book examples again
+later.
+
+So most of the time projects will use venvs accessible via ``pyvenv-workon``, but
+sometimes I want to take advantage of ``pyvenv-activate``. The trick part is
+that ``pyvenv-workon`` and ``pyvenv-activate`` require different variable
+definitions in your ``.dir-locals.el`` file. ``pyvenv-workon`` takes an unquoted
+*symbol* argument, as shown above. But ``pyvenv-activate`` takes a *string*
+argument, which must be a full path to the venv directory, *omitting* the
+``bin/activate`` fragment. There's no intuitively obvious reason why either of
+those things would be true, so I wasted some time figuring this out.
+
+So where the example above has a succinct ``(pyvenv-workon . snf)`` expression
+inside ``.dir-locals.el``, the expression for ``python-activate`` is longer and
+less obvious:
+
+.. code-block:: lisp
+
+      ; other values and boilerplate omitted
+      (pyvenv-activate . "~/code/py/book/lightweight/lightvenv")
+      
+Not only did I get tripped up over the (undocumented) string-versus-symbol
+issue, it took some experimenting to figure out that the argument ends with
+plain old ``lightvenv`` rather than ``lightvenv/bin/activate``. Now you know!
+
+NB: As a final weirdness, note that emacs stores a list of "save local
+variables", confirmed by the user to be OK to use, inside ``init.el``. My quoted
+string above is saved to the ``init.el`` safe-local-variable-values list as
+follows:
+
+.. code-block:: lisp
+
+     ; most of safe-local-variable-values not shown
+     (pyvenv-activate quote /Users/scottfitz/code/py/book/lightweight/lightvenv)
+
+Showing yet *another* variation on how this can be stored.
+
+
 Inspecting Per-Buffer Variable
 ......................................
 
@@ -155,71 +211,9 @@ file pattern, but why wouldn't you be?
 There's no need to pin version numbers in this file.
 
 
-Interactive Mode
-=====================
-
-``C-c C-z`` switch to Python REPL buffer, starting one if necessary. Toggles
-between REPL and source after the first invocation starts the REPL. This does
-*not* load any of the code from the current window! You'll need to either follow
-up with a ``C-c C-c``, or start running ``import`` statements in the REPL. AKA
-``M-x elpy-shell-switch-to-shell``.
-
-``C-c C-c`` sends a full source buffer to the REPL, or a complete selected
-region if you have one active. AKA ``M-x elpy-shell-send-region-or-buffer``
-
-``C-c RET`` sends one (1) statement to the REPL. AKA ``M-x
-elpy-shell-send-current-statement``. 
-
-``C-M-x``   sends nearest/outermost class or function definition to the REPL.
-AKA ``M-x python-shell-send-defun``. 
-
-``M-x elpy-rpc-restart``  Restarts the REPL Python process, in case things have
-gotten wacky on you. 
 
 
-Project Features
-====================
-
-You'll need a project defined in your ``.dir-locals.el`` for this to work. 
-
-``C-c C-f``  Finds a file within the project. AKA ``M-x elpy-find-file``.
-
-``C-c C-s``  Grep search within the project. AKA ``M-x elpy-rgrep-symbol``. 
-
-
-Syntax Tools
-=================
-
-``C-c C-v``  Syntax check, only if ``pyflakes`` is installed in the active venv.
-AKA ``M-x elpy-check``.
-
-``C-c C-d``  shows some (fairly spartan) documentation for the object at the
-mark, if available. AKA ``M-x elpy-doc``. 
-
-``C-c C-r f`` Format file per Pep8. Applies only to selected region if there is
-one. Otherwise it does the whole buffer. AKA ``M-x elpy-format-code``.
-
-``C-c C-r i``  Clean up imports: reorder, remove unused, query for new. AKA
-``M-x elpy-importmagic-fixup``. 
-
-``C-c C-e``  Multiedit symbol names in the whole buffer simultaneously. AKA
-``M-x elpy-multiedit-python-symbol-at-point``, which is quite a mouthful. 
-
-
-Testing
-===========
-
-Tests inline inside emacs with color-coded output, woohoo!
-
-NB: The current venv must have ``pyvenv`` in it for this to work. So add that to
-the standard set of desired packages.
-
-``C-c C-t`` Run all tests using the current test runner. AKA ``M-x elpy-test``.
-Sometimes it seems like I have to run the command once via ``M-x elpy-test``
-once before ``C-c C-t`` works.
-
-
-Appendix I: Path Fu
+Elpy Path Fu
 ===========================================
 
 When you launch a REPL based on a python file, it's not always obvious where the
@@ -283,7 +277,84 @@ consider the top level to the search path.
 
 And from there, all of the examples above work. 
 
-    
+
+Reloading Modules
+---------------------------------
+
+Working with a REPL side-by-side with Python source files is great, but it can
+be tricky to get changes from the file into the REPL. Sometimes you can use one
+of the commands below like ``C-c C-c`` or ``C-M-x``, but sometimes you just want
+to reload the complete buffer *as a module*. In Python 2.x there was no way to
+do this, but as Python 3, the ``importlib`` allows you to do exactly this.
+
+.. code-block:: python
+
+   >>> from importlib import reload
+
+   >>> reload('gedutils.gedomatic')
+
+The ``importlib`` module offers a variety of other tools for use by developers
+writing specialized libraries... but the ``reload`` function is potentially
+useful to anyone who wants to do REPL-based development. 
+
+
+Appendix I: Elpy Commands
+======================================
+
+REPL Commands
+---------------------------------
+
+``C-c C-z`` switch to Python REPL buffer, starting one if necessary. Toggles
+between REPL and source after the first invocation starts the REPL. This does
+*not* load any of the code from the current window! You'll need to either follow
+up with a ``C-c C-c``, or start running ``import`` statements in the REPL. AKA
+``M-x elpy-shell-switch-to-shell``.
+
+``C-c C-c`` sends a full source buffer to the REPL, or a complete selected
+region if you have one active. AKA ``M-x elpy-shell-send-region-or-buffer``
+
+``C-c RET`` sends one (1) statement to the REPL. AKA ``M-x
+elpy-shell-send-current-statement``. 
+
+``C-M-x``   sends nearest/outermost class or function definition to the REPL.
+AKA ``M-x python-shell-send-defun``.
+
+``M-x elpy-rpc-restart``  Restarts the REPL Python process, in case things have
+gotten wacky on you. 
+
+
+Project Features
+_________________________________
+
+``C-c C-f``  Finds a file within the project. AKA ``M-x elpy-find-file``.
+
+``C-c C-s``  Grep search within the project. AKA ``M-x elpy-rgrep-symbol``. 
+
+``C-c C-t``  Run all tests using the current test runner. AKA ``M-x elpy-test``.
+
+
+Syntax Tools
+---------------------------------
+
+``C-c C-v``  Syntax check, only if ``pyflakes`` is installed in the active venv.
+AKA ``M-x elpy-check``.
+
+``C-c C-d``  shows some (fairly spartan) documentation for the object at the
+mark, if available. AKA ``M-x elpy-doc``. 
+
+``C-c C-r f`` Format file per Pep8. Applies only to selected region if there is
+one. Otherwise it does the whole buffer. AKA ``M-x elpy-format-code``.
+
+``C-c C-r i``  Clean up imports: reorder, remove unused, query for new. AKA
+``M-x elpy-importmagic-fixup``. 
+
+``C-c C-e``  Multiedit symbol names in the whole buffer simultaneously. AKA
+``M-x elpy-multiedit-python-symbol-at-point``, which is quite a mouthful. 
+
+
+
+
+
 
     
 
