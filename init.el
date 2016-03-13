@@ -65,12 +65,13 @@
    [default bold shadow italic underline bold bold-italic bold])
  '(custom-safe-themes
    (quote
-    ("52588047a0fe3727e3cd8a90e76d7f078c9bd62c0b246324e557dfa5112e0d0c" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "9e54a6ac0051987b4296e9276eecc5dfb67fdcd620191ee553f40a9b6d943e78" "8b51a9d5604680d5d533c9cae132f68bca1e02563b2b0943ff9d45eb9043605a" "ebc7e94f697502eb2828c5ceb00ae073f05492d5a62c542d4acd2de4e3edba72" "5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "e93c4567f5d30365064747972b179e80939cee875627034dc76cd50477c6b998" default)))
+    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "342e86760238905d408a499b9935666d854414a5f7d75b4649088093584bb3cb" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "fd7ef8af44dd5f240e4e65b8a4eecbc37a07c7896d729a75ba036a59f82cfa58" "52588047a0fe3727e3cd8a90e76d7f078c9bd62c0b246324e557dfa5112e0d0c" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "9e54a6ac0051987b4296e9276eecc5dfb67fdcd620191ee553f40a9b6d943e78" "8b51a9d5604680d5d533c9cae132f68bca1e02563b2b0943ff9d45eb9043605a" "ebc7e94f697502eb2828c5ceb00ae073f05492d5a62c542d4acd2de4e3edba72" "5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "e93c4567f5d30365064747972b179e80939cee875627034dc76cd50477c6b998" default)))
  '(fci-rule-color "#2a2a2a")
  '(pyvenv-mode t)
  '(safe-local-variable-values
    (quote
-    ((pyvenv-activate quote /Users/scottfitz/code/py/book/lightweight/lightvenv)
+    ((elpy-project-root . ~/code/py/snf/snf)
+     (pyvenv-activate quote /Users/scottfitz/code/py/book/lightweight/lightvenv)
      (elpy-project-root . ~/code/py/book/lightweight)
      (elpy-project-ignored-directories . gedcom)
      (elpy-project-root . ~/code/py/gedomatic)
@@ -97,6 +98,35 @@
 (add-to-list 'auto-mode-alist '("\\.j2$" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?$" . web-mode))
 
-;; SNF per the docs, you need to add specific engine associations!
+;; SNF per web-mode docs, you need to add specific engine associations!
 (setq web-mode-engines-alist
       '(("django" . "\\.html?$")))
+
+;; SNF: added for js2-mode
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+;; make the Node REPL show a '>' instead of garbage chars
+(setenv "NODE_NO_READLINE" "1")
+
+
+(require 'js-comint) 
+
+(setq inferior-js-program-command "node") ;; not "node-repl"
+
+;; could also use 'js3-mode-hook here
+(add-hook 'js2-mode-hook '(lambda () 
+                            (local-set-key "\C-x\C-e" 
+                                           'js-send-last-sexp)
+                            (local-set-key "\C-\M-x" 
+                                           'js-send-last-sexp-and-go)
+                            (local-set-key "\C-cb" 
+                                           'js-send-buffer)
+                            (local-set-key "\C-c\C-b" 
+                                           'js-send-buffer-and-go)
+                            (local-set-key "\C-cl" 
+                                           'js-load-file-and-go)))
+
+;; jade-mode @ https://github.com/brianc/jade-mode
+(add-to-list 'load-path "~/.emacs.d/vendor/jade-mode")
+(require 'jade-mode)
+(add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))

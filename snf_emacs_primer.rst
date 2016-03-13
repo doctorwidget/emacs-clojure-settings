@@ -104,6 +104,13 @@ Search and Replace
 ``C-M-% STRING``   query-replace mode, but with regexps
 
 
+Buffer List Commands
+=================================
+
+``C-x C-b`` 
+
+
+
 
 Copy and Paste
 ======================
@@ -238,12 +245,12 @@ Files:
 Buffers:
 ========================
 
-``C-x C-b`` to list all current buffers. 
+``C-x C-b`` Open buffer of buffers. It's buffers all the way down. Shortcut for 
+``M-x buffer-menu``. Also consider using ``M-x buffer-menu-other-window``.
 
 ``C-x b`` (*not C-x C-b!*) gives a minibuffer to type the name of the buffer to
-            switch to. Works much better than C-x C-b for multiple windows,
-            loading the file into whichever window you were in when you issued
-            the command.
+switch to. Works much better than C-x C-b for multiple windows, loading the file
+into whichever window you were in when you issued the command.
 
 ``C-x s``   Save all unsaved buffers, but you must confirm *y/n* each one.
 ``C-x C-s`` Save the *current* buffer.
@@ -254,6 +261,44 @@ Buffers:
 ``M-x kill-buffer`` alias
 
 ``M-x kill-some-buffers`` Offers to kill all buffers, round robin style. 
+
+
+Buffer of Buffer Commands
+---------------------------------
+
+For use while inside the buffer of buffers only! 
+
+``g``  refresh the buffer list
+
+``d``  mark that buffer for deletion and move down one row (``C-d`` goes up)
+
+``s``  mark that buffer for saving and move down one row
+
+``u``  unmark that buffer
+
+``x``  execute commands on all buffers
+
+``f``  select that buffer, taking over the current window panel!
+
+``o``  select that buffer, bringing it to the front in an adjacent window panel,
+and moving the cursor to that adjancent window panel. Buffer of buffers remains
+visible but inactive.
+
+``C-o`` select that buffer, bringing it to the ront in an adjacent window panel,
+but keeping the cursor in the buffer of buffers panel. 
+
+``q``  quit the buffer of buffers
+
+
+Various Rectangle Names
+----------------------------
+
+Remember that in emacs, ``frames`` are the highest-level, outermost rectangles
+-- what every other language and OS calls a *window*. An emacs ``window`` is a
+subdivision of a frame; I think of it as a window **pane**, which makes the name
+a bit more sensible. Finally, a ``buffer`` is any blob of memory, which means it
+could be showing the contents of a file, or a miniprogram like the buffer of
+buffers, or a dired buffer, or a running shell process, and so on and so forth.
 
 
 Processes:

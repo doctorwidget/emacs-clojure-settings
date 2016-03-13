@@ -297,6 +297,58 @@ The ``importlib`` module offers a variety of other tools for use by developers
 writing specialized libraries... but the ``reload`` function is potentially
 useful to anyone who wants to do REPL-based development. 
 
+Searching
+==================
+
+Note that ``C-C C-s`` (aka elpy-rgrep-symbol) function mentioned below doesn't
+actually work very well in practice: all it ever gives me is an error about
+wrong argument types stringp blah blah. You'll get better results with the
+built-in emacs functions:
+
+``find-grep`` || ``grep-find``  (synonyms). This lets you type a complete
+``grep`` command into the minibuffer. You get a template which includes a *lot*
+of options!
+
+.. code-block:: bash
+
+    Run find (like this): find . -type f -exec grep -nH -e  {} +
+
+The ``.`` near the front should be replaced by the search path. The regular
+expression should get inserted between the ``-e`` and the ``{}``. The ``-nH``
+turns on file names and line numbers in the output, and the ``-e`` precedes the
+regular expression. Simple regex literals can be typed out sans quotes, but as
+soon as you need anything fancy you should single-quote the whole thing.
+
+NB: the weird trailing ``{}`` and ``+`` have *nothing* to do with the usual
+regex modifiers for number of matches; the ``{}`` will be template-expanded with
+a file name, and the ``+`` is the terminator for the ``-exec`` clause. So
+``-exec`` is a modifier for ``find``, which says "run the following command on
+each and every file, templateexpanding the file name into the ``{}``, and ending
+at the ``+``.
+
+Adding an ``I`` option (i.e. change ``-nH`` to ``-nHI`` will skip over binary
+files. If you don't do that you tend to end up with a lot of binary file
+matches.
+
+Add ``i`` option (e.g. ``-nHIi``) for a case-insensitive search.
+
+Finally, rather than typing out the complete search path, you have the option of
+opening a ``dired`` window and navigating to where you want the top of the
+search to start (generally this will only be one or two levels up). When you run
+``grep-find`` from a dired window, the current directory is the ``.`` for that
+search. That might not be any faster but it feels less hacky than moving the
+cursor all around the minibuffer.
+
+You can also use ``find-grep-dired`` instead of ``find-grep`` and ``grep-find``.
+This has the advantage of a clearer and more explicit user experience (you get
+prompted in the minibuffer separately for the directory and the regexp), but it
+does *not* include line number matches in the results, which makes it *far* less
+useful.
+
+Finally, the ``rgrep`` and ``lgrep`` commands seem to offer the best of both
+worlds, prompting you for regex, directory to search, and even default file
+suffix to search in. They *do* provide line numbers in the output buffer. 
+
 
 Appendix I: Elpy Commands
 ======================================
@@ -326,12 +378,23 @@ gotten wacky on you.
 Project Features
 _________________________________
 
-``C-c C-f``  Finds a file within the project. AKA ``M-x elpy-find-file``.
+``C-c C-f``  Finds a file within the project. AKA ``M-x elpy-find-file``. NB:
+this works nicely if the project is set correctly. 
 
-``C-c C-s``  Grep search within the project. AKA ``M-x elpy-rgrep-symbol``. 
+``C-c C-s`` Grep search within the project. AKA ``M-x elpy-rgrep-symbol``. NB:
+always throws error regarding argument types (stringp, blahblah) as of 2016-Feb.
+Use vanilla ``rgrep`` instead; it's slightly more typing but actually works.
 
 ``C-c C-t``  Run all tests using the current test runner. AKA ``M-x elpy-test``.
+NB: works nicely if project and elpy-test-runner are both set. 
 
+``M-.`` Go to the definition of the current symbol *inside* the current window.
+AKA ``elpy-goto-definition``. Consider ``elpy-goto-definition-other-window``
+instead, because who wants to overwrite the current buffer? Alternatively use
+this with ``M-*``, below, to toggle between original / source and back again. 
+
+``M-*`` Pop back and forth between an ``M-.`` buffer and its origin. AKA
+``elpy-pop-tag-mark``. Works pretty well!
 
 Syntax Tools
 ---------------------------------
@@ -346,7 +409,7 @@ mark, if available. AKA ``M-x elpy-doc``.
 one. Otherwise it does the whole buffer. AKA ``M-x elpy-format-code``.
 
 ``C-c C-r i``  Clean up imports: reorder, remove unused, query for new. AKA
-``M-x elpy-importmagic-fixup``. 
+``M-x elpy-importmagic-fixup``. NB: nothing but errors as of 2016-Feb
 
 ``C-c C-e``  Multiedit symbol names in the whole buffer simultaneously. AKA
 ``M-x elpy-multiedit-python-symbol-at-point``, which is quite a mouthful. 

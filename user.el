@@ -47,11 +47,12 @@
 (set-face-attribute 'default nil :height 140)
 
 ;; themes galore!
-(load-theme 'adwaita t)
+;;(load-theme 'adwaita t)
 ;;(load-theme 'wombat t)
 ;;(load-theme 'soft-stone t)
 ;;(load-theme 'tomorrow-night-bright t)
-
+(load-theme 'solarized-dark t)
+;;(load-theme 'solarized-light t)
 
 ;; Flyspell often slows down editing so it's turned off
 (remove-hook 'text-mode-hook 'turn-on-flyspell)
